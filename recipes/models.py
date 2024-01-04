@@ -34,8 +34,8 @@ class RecipeManager(models.Manager):
             )
         )\
         .order_by('-id')\
-            .select_related('author', 'category')\
-                .prefetch_related('tags')
+        .select_related('author', 'category')\
+        .prefetch_related('tags')
 
 
 class Recipe(models.Model):

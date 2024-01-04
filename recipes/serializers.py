@@ -22,7 +22,7 @@ class RecipeSerializer(serializers.Serializer):
     
     def any_method(self, recipe):
         return f'{recipe.preparation_time} {recipe.preparation_time_unit}'
-    
+     
 =======
     preparation = serializers.SerializerMethodField(method_name='any_method')
 
