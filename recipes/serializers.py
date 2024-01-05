@@ -3,6 +3,11 @@ from rest_framework import serializers
 from tags.models import Tag
 
 
+class TagSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField(max_length=255)
+    slug = serializers.SlugFild()
+
 class RecipeSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField(max_length=65)
@@ -18,6 +23,11 @@ class RecipeSerializer(serializers.Serializer):
     tags = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=User.objects.all()
+    )
+    
+    tag_objects = TagSerializer(
+        many=True,
+        source='tags'
     )
     
     def any_method(self, recipe):
