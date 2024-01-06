@@ -4,7 +4,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from ..serializers import RecipeSerializer
+from tag.models import Tag
+
+from ..serializers import RecipeSerializer, TagSerializer
 
 
 @api_view()
@@ -12,7 +14,8 @@ def recipe_api_list(request) -> Response:
     recipes = Recipe.objects.get_published()[:10]
     serializer = RecipeSerializer(
         instance=recipes,
-        many=True
+        many=True,
+        context={'request': request}
     )
     return Response(serializer.data)
 
@@ -23,5 +26,23 @@ def recipe_api_detail(request, pk) -> Response:
         pk=pk
     )
     
-    serializer = RecipeSerializer(instance=recipes, many=False)
+    
+    serializer = RecipeSerializer(
+        instance=recipes,
+        many=False,  # Add a comma here
+        context={'request': request}    
+    )
+    return Response(serializer.data)
+
+@api_view()
+def tag_api_detail(request, pk) -> Response:
+    tag = get_object_or_404(
+        Tag.objects.all(),
+        pk=pk
+    )
+    serializer = TagSerializer(
+        instance=tag,
+        many=False,
+        context={'request': request}    
+    )
     return Response(serializer.data)

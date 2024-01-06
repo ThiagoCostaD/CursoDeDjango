@@ -1,8 +1,8 @@
-from django.urls import path  # type: ignore
+from django.urls import path
 
 from recipes import views
 
-app_name = 'recipes'
+APP_NAME = 'recipes'
 
 urlpatterns = [
     path(
@@ -55,4 +55,9 @@ urlpatterns = [
         views.recipe_api_detail,
         name="recipes_api_v2_detail",
     ),
+    path(
+        'recipes/api/v2/tag/<int:pk>/',
+        views.tag_api_detail,
+        name='recipes_api_v2_tag',
+    )
 ]
