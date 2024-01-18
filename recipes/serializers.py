@@ -44,3 +44,11 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def any_method_name(self, recipe):
         return f'{recipe.preparation_time} {recipe.preparation_time_unit}'
+
+    def validate(self, attrs):
+        print('validate')
+        return super().validate(attrs)
+
+    def validate_title(self, value):
+        print('Validate title', '| Valor:', value)
+        return value
