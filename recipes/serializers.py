@@ -1,3 +1,5 @@
+
+
 from rest_framework import serializers
 
 from tag.models import Tag
@@ -46,9 +48,27 @@ class RecipeSerializer(serializers.ModelSerializer):
         return f'{recipe.preparation_time} {recipe.preparation_time_unit}'
 
     def validate(self, attrs):
-        print('validate')
-        return super().validate(attrs)
+        super_validate = super().validate(attrs)
+        
+        title = attrs.get('title')
+        description = attrs.get('description')
+
+        if title == description:
+            raise serializers.ValidationError(
+                {
+                    "title":[ "Posso", "ter", "mais", "de", "um", "erro" ],
+                    "description":[ "Posso", "ter", "mais", "de", "um", "erro" ],
+                }
+            )
+
+        return super_validate
 
     def validate_title(self, value):
-        print('Validate title', '| Valor:', value)
-        return value
+        title = value
+
+        if len(title) < 5:
+            raise serializers.ValidationError(
+                'Must have at least 5 chars.'
+            )
+
+        return title
