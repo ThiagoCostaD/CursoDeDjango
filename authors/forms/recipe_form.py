@@ -1,9 +1,8 @@
 from collections import defaultdict
 
+from authors.validators import AuthorRecipeValidator
 from django import forms
 from django.core.exceptions import ValidationError
-
-from authors.validators import AuthorRecipeValidator
 from recipes.models import Recipe
 from utils.django_forms import add_attr
 
@@ -44,5 +43,5 @@ class AuthorRecipeForm(forms.ModelForm):
 
     def clean(self, *args, **kwargs):
         super_clean = super().clean(*args, **kwargs)
-        AuthorRecipeValidator(self.cleaned_data, ErrosClass=ValidationError)
+        AuthorRecipeValidator(self.cleaned_data, ErrorClass=ValidationError)
         return super_clean

@@ -1,7 +1,6 @@
 from unittest.mock import patch
 
 from django.urls import resolve, reverse
-
 from recipes.views import site
 
 from .test_recipe_base import RecipeTestBase
