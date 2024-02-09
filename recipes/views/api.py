@@ -2,37 +2,30 @@ from multiprocessing.managers import BaseManager
 
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
-from rest_framework.generics import (ListCreateAPIView,
-                                     RetrieveUpdateDestroyAPIView)
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
-from recipes.serializers import RecipeSerializer
 from tag.models import Tag
 
 from ..models import Recipe
+from ..serializers import RecipeSerializer, TagSerializer
 
 
 class RecipeAPIv2Pagination(PageNumberPagination):
     page_size = 10
-    page_size_query_param: str = 'page_size'
-    max_page_size = 100
 
-class RecipeAPIv2List(ListCreateAPIView):
+class RecipeAPIv2ViewSet(ModelViewSet):
 
     queryset = Recipe.objects.get_published()
     serializer_class = RecipeSerializer
     pagination_class = PageNumberPagination
 
-class RecipeAPIv2Detail(RetrieveUpdateDestroyAPIView):
-    queryset = Recipe.objects.get_published()
-    serializer_class = RecipeSerializer
-    pagination_class = PageNumberPagination
-
-    def partial_update(self, request, *args, **kwargs) -> Response:
+    def patch(self, request, *args, **kwargs) -> Response:
         pk = kwargs.get('pk')
+
         recipe: BaseManager[Recipe] = Recipe.objects.filter(pk=pk).first()
-        serializers = RecipeSerializer(
+        serializer = RecipeSerializer(
             instance=recipe,
             data=request.data,
             many=False,
@@ -43,7 +36,6 @@ class RecipeAPIv2Detail(RetrieveUpdateDestroyAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
 
 @api_view()
 def tag_api_detail(request, pk):
